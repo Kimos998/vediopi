@@ -1,0 +1,33 @@
+<div id="app">
+  <div v-if="loading">
+    <p>Please wait...</p>
+  </div>
+  <ul v-if="!loading">
+    <li v-for="beer in beers">
+      <h2>{{ beer.description }}</h2>
+      <i>{{ beer.url }}</i>
+      <p>{{ beer.category }}</p>
+    </li>
+  </ul>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      loading: true,
+      beers: []
+    },
+    mounted() {
+      setTimeout(() => {
+        this.loading = false;
+      }, 3500); // تغيير الرقم إلى 5000 لتمثيل 5 ثواني
+      fetch('https://script.googleusercontent.com/macros/echo?user_content_key=JT_FSAAFbJI-ly4bVnCjV5bwk8xvkeMfLy7umuifbzFwBQsVimEGYX-F2vaky6eLqVm2r7Udug_ERaMwg87pGKdzPLcTF5fUm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnITA8bdDrEEUk3Mg5M9z5AAz-0lb6vSeKf7au4u1EQg_cOMSLqB5eDue-d7ckGlTjRC2VKWnHs6C1eAY7xLFF_eBmqR6UpUDVQ&lib=MXlNU7ZMZZqY7f8FZlBkz_u-TjKIvX8ZV')
+        .then(response => response.json())
+        .then(data => {
+          this.beers = data;
+        });
+    }
+  });
+</script>
