@@ -1,6 +1,37 @@
+<style>
+  .loading-container {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.8); /* خلفية شفافة */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999; /* ليظهر فوق أي عناصر أخرى */
+  }
+
+  .loading-text {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    animation: pulse 1s infinite alternate; /* تومض باستمرار */
+  }
+
+  @keyframes pulse {
+    from {
+      opacity: 0.5;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+</style>
+
 <div id="app">
-  <div v-if="loading">
-    <p>Please wait...</p>
+  <div class="loading-container" v-if="loading">
+    <p class="loading-text">Please wait...</p>
   </div>
   <ul v-if="!loading">
     <li v-for="beer in beers">
@@ -31,3 +62,4 @@
     }
   });
 </script>
+
