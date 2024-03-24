@@ -1,0 +1,62 @@
+<div id="app">
+  <div v-if="displayedBeers.length > 0">
+    <div v-for="(beer, index) in displayedBeers" :key="index">
+      <h2>{{ beer.description }}</h2>
+      <i>{{ beer.url }}</i>
+      <p>{{ beer.category }}</p>
+    </div>
+    <button v-if="currentIndex > 0" @click="goBack">رجوع</button>
+    <button v-if="displayedBeers.length === itemsPerPage && currentIndex + itemsPerPage < beers.length" @click="showMore">قراءة المزيد</button>
+    <p v-if="!displayedBeers.length && showMessage" style="color: red; font-weight: bold; margin-top: 20px;">لا يوجد محتوى لعرضه</p>
+    <p v-if="showEndMessage" style="font-weight: bold; margin-top: 20px;">هذه هي النهاية</p>
+  </div>
+  <p v-else-if="showMessage" style="color: red; font-weight: bold; margin-top: 20px;">لا يوجد محتوى لعرضه</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script>
+new Vue({
+  el: '#app',
+  data: {
+    beers: [],
+    displayedBeers: [],
+    itemsPerPage: 6,
+    currentIndex: 0,
+    showMessage: false,
+    showEndMessage: false
+  },
+  mounted() {
+    fetch('https://script.googleusercontent.com/macros/echo?user_content_key=JT_FSAAFbJI-ly4bVnCjV5bwk8xvkeMfLy7umuifbzFwBQsVimEGYX-F2vaky6eLqVm2r7Udug_ERaMwg87pGKdzPLcTF5fUm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnITA8bdDrEEUk3Mg5M9z5AAz-0lb6vSeKf7au4u1EQg_cOMSLqB5eDue-d7ckGlTjRC2VKWnHs6C1eAY7xLFF_eBmqR6UpUDVQ&lib=MXlNU7ZMZZqY7f8FZlBkz_u-TjKIvX8ZV')
+      .then(response => response.json())
+      .then(data => {
+        this.beers = data;
+        this.displayedBeers = this.beers.slice(this.currentIndex, this.itemsPerPage);
+        if (this.displayedBeers.length === 0) {
+          this.showMessage = true;
+        }
+        if (this.displayedBeers.length < this.itemsPerPage || this.currentIndex + this.itemsPerPage >= this.beers.length) {
+          this.showEndMessage = true;
+        }
+      });
+  },
+  methods: {
+    showMore() {
+      this.currentIndex += this.itemsPerPage;
+      this.displayedBeers = this.beers.slice(this.currentIndex, this.currentIndex + this.itemsPerPage);
+      this.showMessage = false; // إخفاء الرسالة عندما يتم عرض المزيد من العناصر
+      
+      if (this.displayedBeers.length < this.itemsPerPage || this.currentIndex + this.itemsPerPage >= this.beers.length) {
+        this.showEndMessage = true; // إظهار الرسالة عندما لم يعد هناك مزيد للعرض
+      }
+    },
+    goBack() {
+      this.currentIndex -= this.itemsPerPage;
+      this.displayedBeers = this.beers.slice(this.currentIndex, this.currentIndex + this.itemsPerPage);
+      this.showEndMessage = false;
+      
+     
+    
+    }
+  }
+});
+</script>
